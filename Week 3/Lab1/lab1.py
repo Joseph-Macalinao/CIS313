@@ -214,9 +214,3 @@ def isPalindromeEC(s):
     # Return appropriate value
     return
 
-
-def main(s):
-    print(f"{isPalindrome(s)}")
-
-
-main("Ta co cAt")
