@@ -59,7 +59,28 @@ class Node(object):
         return self.__next_node
 
 class Queue(object):
-    """Provide class dosctring"""
+    """A class to represent a node.
+
+    ...
+
+    Attributes
+    ----------
+    head : Node object
+        first node in line to be dequeued
+    tail : object of class Node
+        last node to be queued
+
+    Methods
+    -------
+    enqueue(self, newData)
+        enqueues items to the queue
+
+    dequeue(self)
+        takes head of queue and returns its value while setting the next node as the new head
+
+    isEmpty(self)
+        checks to see if the queue is empty
+    """
 
     def __init__(self):
         self.__head = None
@@ -101,13 +122,15 @@ class Queue(object):
         #  Hint: Return null on a empty Queue
         # Hint: Return the element(data) that is dequeued.
         if self.__head == None:
-            return None
+            raise Exception("Empty")
+
+
         front = self.__head
         self.__head = self.__head.getNext()
 
         if self.__head is None:
             self.__tail = None
-        return front
+        return front.getData()
 
 
 
@@ -118,7 +141,27 @@ class Queue(object):
 
 
 class Stack(object):
-    """Provide class dosctring"""
+    """A class to represent a node.
+
+    ...
+
+    Attributes
+    ----------
+    head : Node object
+        "top" object in the stack
+
+
+    Methods
+    -------
+    push(newData):
+        pushes new node on top of stack
+
+    pop(next_node):
+        pops off top node from stack and returns its value
+
+    isEmpty():
+        checks to see if the stack is empty
+    """
     def __init__(self):
         ''' We want to initialize our Stack to be empty.
         (ie) Set top as null'''
@@ -162,16 +205,28 @@ class Stack(object):
         # Hint: Return the element(data) that is popped
         if self.__head == None:
             return None
+            #raise Exception("Empty")
 
         else:
             popped = self.__head
             self.__head = self.__head.getNext()
             popped.__next_node = None
-            return popped
+            return popped.getData()
 
     def isEmpty(self):
         '''Check if the Stack is empty.'''
         return self.__head is None
+
+class TwoStackQueue(object):
+    def __init__(self):
+        stack1 = Stack()
+        stack2 = Stack()
+        self.stack1 = stack1
+        self.stack2 = stack2
+
+    def enqueue(self, newData):
+        return
+
 
 
 def isPalindrome(s):
@@ -192,7 +247,7 @@ def isPalindrome(s):
         popped = myStack.pop()
         deq = myQueue.dequeue()
         #print(f"{popped.getData()} {deq.getData()}\n")
-        if popped.getData() != deq.getData():
+        if popped != deq:
             return False
         else:
             continue
@@ -212,5 +267,17 @@ def isPalindromeEC(s):
     '''Implement if you wish to do the extra credit.'''
 
     # Return appropriate value
-    return
+    s = s.lower()
+    s = s.replace(" ",'')
+    #print(s)
+    myTwoQueue = TwoStackQueue()
+    for i in range(len(s)):
+        #print(f"push {s[i]}")
+        TwoStackQueue.enqueue(s[i])
+        #print(f"queue {s[i]}")
+    #print(myQueue)
+    #print(myStack)
+    for i in range(len(s)):
+        deq = TwoStackQueue.dequeue()
+        #print(f"{popped.getData()} {deq.getData()}\n")
 
