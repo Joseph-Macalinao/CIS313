@@ -99,13 +99,25 @@ class Stack(object):
 
     def __str__(self):
         '''Loop through your stack and print each Node's data.'''
-        pass
+        if self.__head == None:
+            print("Stack is empty")
+        else:
+            node = self.__head
+            while(self.__next_node != None):
+                print(f"{node.__data}")
+                node = node.__next_node
 
     def push(self, newData):
         '''We want to create a node whose data is newData and next node is top.
         Push this new node onto the stack
         Update top'''
-        pass
+        if self.__head == None:
+            self.__head = Node(newData)
+        else:
+            nextNode = Node(newData)
+            nextNode.setNext(self.__head)
+            self.__head = nextNode
+
 
     def pop(self):
         ''' Return the Node that currently represents the top of the stack.
@@ -114,7 +126,12 @@ class Stack(object):
         #         to hold important information
         # Hint: Return null on a empty stack
         # Hint: Return the element(data) that is popped
-        pass
+        if self.isEmpty():
+            return None
+        else:
+            popped = self.__head
+            self.__head = self.__head.__next_node
+            return popped.__data
 
     def isEmpty(self):
         '''Check if the Stack is empty.'''

@@ -24,19 +24,20 @@ class mathOps:
         # Find the greatest common divisor of a and b
         # Hint: Use Euclid's Algorithm
         # https://en.wikipedia.org/wiki/Euclidean_algorithm#Procedure
-        tempU = self.u
-        tempV = self.v
+        tempU = math.ceil(abs(self.u))
+        tempV = math.ceil(abs(self.v))
          
         try:
           if tempU == (float("inf") or float("-inf")) or tempV == (float("inf") or float("-inf")):
             raise OverflowError
 
-        # ENTER YOUR CODE HERE 
+        except OverflowError:
+            print("one or both the values of", tempU, " and ", tempV, "are equal to infinity")
+            raise OverflowError
+        # ENTER YOUR CODE HERE
         # Feel free to modify the exceptions, delete the try block etc or the entire funtion
         # Just keep the fucntion name as gcd
-        except OverflowError:
-          print("one or both the values of", tempU, " and ", tempV, "are equal to infinity")
-          raise OverflowError
+        remain = max(tempU, tempV) % min(tempU, tempV)
         '''
         take 2 input
         divide
