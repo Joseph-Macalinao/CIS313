@@ -1,3 +1,4 @@
+
 class max_heap(object):
     """Binary max-heap
 
@@ -92,8 +93,8 @@ class max_heap(object):
         max = curr_index
         if (left < list_length and self.heap[left] > self.heap[curr_index]):
             max = left
-        elif (right < list_length and self.heap[right] > self.heap[max]):
-            max = right
+            if (right < list_length and self.heap[right] > self.heap[max]):
+                max = right
         if (max != curr_index):
             self.__swap(curr_index, max)
             self.__heapify(max, list_length)
@@ -150,6 +151,7 @@ def heap_sort(l):
     #need a counter for back insertion of elements
 
     # Initialize a heap using the provided list
+    #lis = []
     heap = max_heap(size=len(l), data=l)
 
 
@@ -160,5 +162,7 @@ def heap_sort(l):
     for i in range(len(l) - 1, -1, -1):
         max = heap.extract_max()
         l[i] = max
+        #lis.append(max)
+        #lis.reverse()
 
     return l

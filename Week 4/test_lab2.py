@@ -53,7 +53,15 @@ class T5_heap_sort(unittest.TestCase):
 
         self.assertEqual(sorted_list, [3, 4, 7, 10, 24, 37, 57, 67, 87])
         print("\n")
-    
+
+'''
+tests:
+    test_build_heap
+    test_insert_full
+    test_extract_empty
+    test_operate_pqueue    ->    do things with pqueue()
+    6 other tests
+'''
 
     
     
