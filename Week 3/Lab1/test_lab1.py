@@ -38,5 +38,57 @@ class T2_TestingPalindrome(unittest.TestCase):
         self.assertEqual(p, False)
         print("\n")
 
+class T3_TestingDequeue(unittest.TestCase):
+
+    def test_dequeue(self):
+        q = lab1.Queue()
+        q.enqueue(1)
+        q.enqueue(2)
+        q.enqueue(3)
+        deq = q.dequeue()
+
+        self.assertEqual(deq, 1)
+
+
+class T4_TestingPush(unittest.TestCase):
+
+    def test_basic_push(self):
+        # testing the basic enqueue operation
+        print("\n")
+        q = lab1.Stack()
+        q.push(1)
+        q.push(2)
+        q.push(3)
+        q.push(4)
+
+        self.assertEqual(q.__str__(), '[4, 3, 2, 1]')
+        print("\n")
+
+class T5_TestingPop(unittest.TestCase):
+
+    def test_pop(self):
+        s = lab1.Stack()
+        s.push(1)
+        s.push(2)
+        s.push(3)
+        pop = s.pop()
+
+
+        self.assertEqual(pop, 3)
+
+class T6_TestingisEmpty(unittest.TestCase):
+
+    def testEmpty(self):
+        s = lab1.Stack()
+        self.assertEqual(s.isEmpty(), True)
+
+    def testEmpty2(self):
+        s = lab1.Queue()
+        self.assertEqual(s.isEmpty(), True)
+
+    def testEmpty3(self):
+        s = lab1.TwoStackQueue()
+        self.assertEqual(s.isEmpty(), True)
+
 if __name__ == '__main__':
     unittest.main()
