@@ -29,12 +29,17 @@ class max_heap(object):
             self.heap = [None] * size
         
     def get_heap(self):
+        '''
+        gets the heap data
+        :return: the heap in a list format
+        '''
         return self.heap
 
 
     def insert(self, data):
         """Insert an element into the heap.
-
+        If needed, it will swap nodes around to fit the heap format
+        data: the new data that is to be input into the heap class
         Raises IndexError if the heap is full."""
         # Tips : insert 'data' at the end of the list initially
         #      : swap with its parent until the parent is larger or you 
@@ -43,7 +48,8 @@ class max_heap(object):
         # whatever the new index is, index/2 shows where it goes under
 
         if self.length >= self.max_size:
-            raise IndexError("Too big")
+            raise IndexError
+            #("Too big for ye britches")
         self.heap[self.length] = data
         self.length += 1
 
@@ -57,21 +63,26 @@ class max_heap(object):
 
 
     def peek(self):
-        """Return the maximum value in the heap."""
+        """Return the maximum value in the heap.
+        return: the max node value in the heap
+        """
         if self.length == 0:
             return None
         return self.heap[0]
 
     def extract_max(self):
         """Remove and return the maximum value in the heap.
-
+        then swaps nodes around to reformat the necessary amounts of times to get
+        into heap format
+        :return: the maximum value in a heap
         Raises KeyError if the heap is empty."""
         # Tips: Maximum element is first element of the list
         #     : swap first element with the last element of the list.
         #     : Remove that last element from the list and return it.
         #     : call __heapify to fix the heap
         if self.length == 0:
-            raise KeyError("No elements to extract")
+            raise KeyError
+            #("No elements to extract")
         #max = self.heap[0] didn't work
         #self.heap[0] = None
         self.__swap(0, self.length - 1)
@@ -83,23 +94,34 @@ class max_heap(object):
 
 
     def __heapify(self, curr_index, list_length = None):
+        '''
+        "heapifies data to properly return the proper list formating from big to small, starting at curr_index
+        :param curr_index: the place in the heap that heapify will occur
+        :param list_length: the length of a given list
+        :return: no return , swaps the heap in place
+        '''
         # helper function for moving elements down in the heap
         # Page 157 of CLRS book
         if list_length is None:
             list_length = self.length
-        right = self.__get_right(curr_index)
-        left = self.__get_left(curr_index)
+        right_child = self.__get_right(curr_index)
+        left_child = self.__get_left(curr_index)
 
         max = curr_index
-        if (left < list_length and self.heap[left] > self.heap[curr_index]):
-            max = left
-            if (right < list_length and self.heap[right] > self.heap[max]):
-                max = right
+        if (left_child < list_length and self.heap[left_child] > self.heap[curr_index]):
+            max = left_child
+            if (right_child < list_length and self.heap[right_child] > self.heap[max]):
+                max = right_child
         if (max != curr_index):
             self.__swap(curr_index, max)
             self.__heapify(max, list_length)
 
     def build_heap(self):
+        '''
+        build a heap out of given data to fit heap format
+        uses the given data to then move nodes around in the array provided
+        :return: none
+        '''
         # builds max heap from the list l.
         # Tip: call __heapify() to build to the list
         #    : Page 157 of CLRS book
@@ -112,6 +134,11 @@ class max_heap(object):
     ''' But do not modify the function definitions of any of the above methods'''
 
     def __get_parent(self, loc):
+        '''
+        gets the parent of a given node in a max heap
+        :param loc: the current location of a given node in the heap
+        :return: the location of the parent of the node input in the heap
+        '''
         # left child has odd location index
         # right child has even location index
         # if loc % 2 == 0:
@@ -121,13 +148,29 @@ class max_heap(object):
         return parent
 
     def __get_left(self, loc):
+        '''
+        get the left child of a given "node" in a max heap
+        :param loc: location in the heap that the node is in
+        :return: the location of the left child
+        '''
         return 2*loc + 1
 
     def __get_right(self, loc):
+        '''
+        gets the right child of a given "node" in a max heap
+        :param loc: the location in the heap that the node is in
+        :return: the location of the right child
+        '''
         return 2*loc + 2
         
 
     def __swap(self, a, b):
+        '''
+        swap function in the max heap class to swap two elements in the heap
+        :param a: first element to swap, item in list
+        :param b: second element to swap, item in list
+        :return: none
+        '''
         # swap elements located at indexes a and b of the heap
         temp = self.heap[a]
         self.heap[a] = self.heap[b]
@@ -139,7 +182,10 @@ class max_heap(object):
     
 
 def heap_sort(l):
-    """Sort a list in place using heapsort."""
+    """Sort a list in place using heapsort.
+    l: list given to heap_sort on
+    return : a list that is now heap sorted
+    """
     # Note: the heap sort function is outside the class
     #     : The sorted list should be in ascending order
     # Tips: Initialize a heap using the provided list
@@ -151,18 +197,11 @@ def heap_sort(l):
     #need a counter for back insertion of elements
 
     # Initialize a heap using the provided list
-    #lis = []
     heap = max_heap(size=len(l), data=l)
 
-
-    # Use build_heap() to turn the list into a valid heap
     heap.build_heap()
 
-    # Repeatedly extract the maximum and place it at the end of the list
     for i in range(len(l) - 1, -1, -1):
         max = heap.extract_max()
         l[i] = max
-        #lis.append(max)
-        #lis.reverse()
-
     return l
