@@ -7,6 +7,26 @@ class max_heap(object):
     doesn't have built-in arrays, the underlying implementation uses a
     Python list instead. When initialized, max_heap creates a new list of
     fixed size or uses an existing list.
+
+    atts: size, data
+    size: the size is the length of any given heap and will provide bounds on how big
+    it can get when inserting
+    data: the data that will be input into the max heap, either in list or none format
+
+    methods:
+
+    get_heap - returns heap
+    insert - inserts new data into heap and reformats if necessary
+    peek - returns root node without removing it
+    extract_max - returns and removes root node and reformats heap
+    __heapify - sifts items downwards until heap is correct
+    build_heap - builds a heap out of data given (usually in a list)
+    __get_parent - gets the parent location of a node
+    __get_left - gets left child of a node
+    __get_right - gets right child of a node
+    __swap - swaps two nodes
+
+
     """
 
     def __init__(self, size = 20, data = None):
@@ -82,11 +102,9 @@ class max_heap(object):
         #     : call __heapify to fix the heap
         if self.length == 0:
             raise KeyError
-            #("No elements to extract")
-        #max = self.heap[0] didn't work
-        #self.heap[0] = None
-        self.__swap(0, self.length - 1)
-        max = self.heap[self.length - 1]
+        max = self.heap[0]
+        self.heap[0] = self.heap[self.length - 1]
+        self.heap[self.length - 1] = None
         self.length -= 1
         self.__heapify(0)
 
@@ -141,9 +159,6 @@ class max_heap(object):
         '''
         # left child has odd location index
         # right child has even location index
-        # if loc % 2 == 0:
-        #     parent = int((loc - 2) / 2)
-        # else:
         parent = int((loc - 1) / 2)
         return parent
 
