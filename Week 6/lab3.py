@@ -162,28 +162,58 @@ class Tree(object):
     
     	# Return object of successor if found else return None
 
+
         if self.root is None:
             return None
         if self.contains(data) is False:
             raise KeyError
         curr = self.__find_node(data)
-        curr_right = curr.right
+        # tree = Tree
+        # tree.root = curr
+        curr_p = curr.parent
+        print(f"{curr.data}")
+        print(f"{curr.parent.data}")
+        print(f"{curr.left.data}")
+        print(f"{curr.right.data}")
         if curr.right is not None:
-            while (curr != None):
-                curr = curr.right
-                if curr.left is not None:
-                    return curr.left
-            return curr_right
-            #return curr.min()
-            #return curr.min()
-        else: #should find if a nodes data is smaller than current succ but greater than data
-            curr = self.__find_node(data)
-            while(curr != self.root.right and curr != self.root.left):
-                curr = curr.parent
-                if (curr.parent.left is not None):
-                    if curr.parent.left == curr:
-                        return curr
-        return None
+            curr = curr.right
+            while curr.left is not None: #just part
+                curr = curr.left
+            return curr#not actual conditional
+        print(f"{curr_p.data}")
+        while curr_p is not None and curr == curr_p.right:
+            curr = curr_p
+            curr_p = curr_p.parent
+        if curr_p.data == self.root.data:
+            return self.root
+        return curr_p
+
+
+
+
+
+        # if self.root is None:
+        #     return None
+        # if self.contains(data) is False:
+        #     raise KeyError
+        # curr = self.__find_node(data)
+        # curr_right = curr.right
+        # if curr.right is not None:
+        #     while (curr != None):
+        #         curr = curr.right
+        #         if curr.left is not None:
+        #             return curr.left
+        #     return curr_right
+        #     #return curr.min()
+        #     #return curr.min()
+        # else: #should find if a nodes data is smaller than current succ but greater than data
+        #     curr = self.__find_node(data)
+        #     while(curr != self.root.right and curr != self.root.left):
+        #         curr = curr.parent
+        #         if (curr.parent.left is not None):
+        #             if curr.parent.left == curr:
+        #                 return curr
+        # return None
 
 
     def delete(self, data):

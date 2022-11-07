@@ -166,5 +166,55 @@ class T5_contains(unittest.TestCase):
         self.assertEqual(t.contains(15), False)
         print("\n")
 
+class T6_insert_2(unittest.TestCase):
+
+    def test_insert2(self):
+        print("\n")
+        print("test 2")
+        tree_success = lab3.Tree()
+        tree_success.insert(8)
+        tree_success.insert(3)
+        tree_success.insert(10)
+        tree_success.insert(1)
+        tree_success.insert(6)
+        tree_success.insert(4)
+        tree_success.insert(7)
+        tree_success.insert(14)
+        tree_success.insert(13)
+
+        self.assertEqual(tree_success.root.data, 8)
+        self.assertEqual(tree_success.root.left.data, 3)
+        self.assertEqual(tree_success.root.right.data, 10)
+        self.assertEqual(tree_success.root.left.left.data, 1)
+        self.assertEqual(tree_success.root.left.right.data, 6)
+        self.assertEqual(tree_success.root.left.right.left.data, 4)
+        self.assertEqual(tree_success.root.left.right.right.data, 7)
+        self.assertEqual(tree_success.root.right.right.data, 14)
+        self.assertEqual(tree_success.root.right.right.left.data, 13)
+        print("\n")
+
+
+
+class T7_successor(unittest.TestCase):
+
+    def test_successor(self):
+        print("\n")
+        print("successor function")
+        tree_success = lab3.Tree()
+        tree_success.insert(8)
+        tree_success.insert(3)
+        tree_success.insert(10)
+        tree_success.insert(1)
+        tree_success.insert(6)
+        tree_success.insert(4)
+        tree_success.insert(7)
+        tree_success.insert(14)
+        tree_success.insert(13)
+
+        easy_success = tree_success.find_successor(6).data
+
+
+        self.assertEqual(easy_success, 7)
+
 if __name__ == '__main__' :
     unittest.main()
