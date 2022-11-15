@@ -6,6 +6,9 @@ class Node(object):
         self.data = data
 
 
+    def set_parent(self, curr_node, parent):
+        curr_node.parent = parent
+
 class Tree(object):
     # Binary Search Tree
     # class constants
@@ -35,11 +38,11 @@ class Tree(object):
         # Find the right spot in the tree for the new node
         # Make sure to check if anything is in the tree
         # Hint: if a node n is None, calling n.data will cause an error
+        node = Node(data)
         if self.root is None:
-            self.root = Node(data)
+            self.root = node
             return
-        new_node = Node(data)
-        new_parent = None
+        parent = None
         curr = self.root
         # if ((curr.left is None) and (curr.right is None)):
         #     if (data > curr.data):
@@ -47,27 +50,19 @@ class Tree(object):
         #     elif (data < curr.data):
         #         curr.left = Node(data)
         while (curr != None):
-            if (curr.left is None) and (data < curr.data):
-                curr.left = new_node
-                new_node.parent = new_parent
-                break
-            elif (curr.right is None) and (data > curr.data):
-                curr.right = new_node
-                new_node.parent = new_parent
-                break
-            elif (curr.left != None) and (data < curr.data):
-                new_parent = curr
+            if curr.data > data:
+                parent = curr
                 curr = curr.left
-            elif (curr.right != None) and (data > curr.data):
-                new_parent = curr
+            elif curr.data < data:
+                parent = curr
                 curr = curr.right
-        if ((curr.left is None) and (curr.right is None)):
-            if (data > curr.data):
-                curr.right = new_node
-                new_node.parent = new_parent
-            elif (data < curr.data):
-                curr.left = new_node
-                new_node.parent = new_parent
+        if parent.data > data:
+            parent.left = node
+            node.set_parent(node, parent)
+        elif parent.data < data:
+            parent.right = node
+            node.set_parent(node, parent)
+
 
     def min(self):
         # Returns the minimum value held in the tree
@@ -145,9 +140,21 @@ class Tree(object):
     def __traverse(self, curr_node, traversal_type):
         # helper method implemented using generators
         # all the traversals can be implemented using a single method
-        
+
         #Yield data of the correct node/s
-        pass
+        if curr_node != None:
+            if traversal_type == Tree.PREORDER:
+                yield curr_node.data
+                yield from self.__traverse(curr_node.left, Tree.PREORDER)
+                yield from self.__traverse(curr_node.right, Tree.PREORDER)
+            elif traversal_type == Tree.INORDER:
+                yield from self.__traverse(curr_node.left, Tree.INORDER)
+                yield curr_node.data
+                yield from self.__traverse(curr_node.right, Tree.INORDER)
+            elif traversal_type == Tree.POSTORDER:
+                yield from self.__traverse(curr_node.left, Tree.POSTORDER)
+                yield from self.__traverse(curr_node.right, Tree.POSTORDER)
+                yield curr_node.data
 
     def find_successor(self, data):
         # Find the successor node
@@ -165,55 +172,26 @@ class Tree(object):
 
         if self.root is None:
             return None
+        curr = self.__find_node(data)
         if self.contains(data) is False:
             raise KeyError
-        curr = self.__find_node(data)
-        # tree = Tree
-        # tree.root = curr
+        #curr = self.__find_node(data)
         curr_p = curr.parent
-        print(f"{curr.data}")
-        print(f"{curr.parent.data}")
-        print(f"{curr.left.data}")
-        print(f"{curr.right.data}")
         if curr.right is not None:
             curr = curr.right
-            while curr.left is not None: #just part
+            while curr.left is not None:
                 curr = curr.left
-            return curr#not actual conditional
-        print(f"{curr_p.data}")
+            return curr
         while curr_p is not None and curr == curr_p.right:
             curr = curr_p
             curr_p = curr_p.parent
-        if curr_p.data == self.root.data:
-            return self.root
+        # if curr_p.data == self.root.data and self.root.data > data:
+        #     return self.root
+        # elif curr_p.data != self.root.data:
+        #     return None
         return curr_p
 
 
-
-
-
-        # if self.root is None:
-        #     return None
-        # if self.contains(data) is False:
-        #     raise KeyError
-        # curr = self.__find_node(data)
-        # curr_right = curr.right
-        # if curr.right is not None:
-        #     while (curr != None):
-        #         curr = curr.right
-        #         if curr.left is not None:
-        #             return curr.left
-        #     return curr_right
-        #     #return curr.min()
-        #     #return curr.min()
-        # else: #should find if a nodes data is smaller than current succ but greater than data
-        #     curr = self.__find_node(data)
-        #     while(curr != self.root.right and curr != self.root.left):
-        #         curr = curr.parent
-        #         if (curr.parent.left is not None):
-        #             if curr.parent.left == curr:
-        #                 return curr
-        # return None
 
 
     def delete(self, data):
@@ -228,22 +206,56 @@ class Tree(object):
         # Note: Make sure to handle the case where the parent is None
         if self.root is None:
             return None
-        del_node = self.__find_node(data)
-        if del_node.data > del_node.parent.data:
-            if del_node.left is None and del_node.right is None:
-                del_node.right = None
-            elif del_node.left is None and del_node.right is not None:
-                del_node.parent.right = del_node.right
-            elif del_node.right is None and del_node.left is not None:
-                del_node.parent.right = del_node.left
+        delete = self.__find_node(data)
+        if delete is None:
+            raise KeyError
+        succ = self.find_successor(delete.data)
+        parent = delete.parent
+        # print(f"delte is {delete.data}")
+        # print(f"succ is {succ.data}\n")
+        #print(f"parent is {parent.data} \n")
 
-        elif del_node.data > del_node.parent.data:
-            if del_node.left is None and del_node.right is None:
-                del_node.parent.left = None
-            elif del_node.left is None and del_node.right is not None:
-                del_node.parent.left = del_node.right
-            elif del_node.right is None and del_node.left is not None:
-                del_node.parent.left = del_node.left
+        # if the node has no children
+        if delete.left is None and delete.right is None:
+            #print(f"{delete.data}")
+            if delete is not self.root:  # check to make sure node isn't root, otherwise make root none
+                if parent.left is delete:
+                    parent.left = None
+                else:
+                    parent.right = None
+            else:
+                self.root = None
+            return
+
+        # if the node has only 1 child
+        elif delete.left is None or delete.right is None:
+            print(f"{delete.data}")
+            if delete is self.root:  # check if node is root
+                if delete.left is None:
+                    self.root = delete.right
+                else:
+                    self.root = delete.left
+            else:  # node is now not root
+                if parent.right is delete and delete.right is None:  # splice the parent and child together
+                    parent.right = delete.left
+                elif parent.right is delete and delete.left is None:
+                    parent.right = delete.right
+                elif delete.left is delete and delete.right is None:
+                    parent.left = delete.left
+                else:
+                    parent.right = delete.right
+            return
+
+        # if the node has 2 children
+        elif delete.left is not None and delete.right is not None:
+            #print(f"{delete.data}")
+            store_succ = succ.data
+
+            self.delete(succ.data)
+
+            delete.data = store_succ
+
+
 
 
 
