@@ -216,5 +216,39 @@ class T7_successor(unittest.TestCase):
 
         self.assertEqual(easy_success, 7)
 
+
+class T8_key_errors(unittest.TestCase):
+
+    def test_key_error1(self):
+        tree = lab3.Tree()
+        tree.insert(5)
+        tree.insert(9)
+
+        self.assertRaises(KeyError, tree.find_successor, 6)
+
+
+class T9_key_errors(unittest.TestCase):
+
+    def test_key_error2(self):
+        tree = lab3.Tree()
+        tree.insert(5)
+        tree.insert(9)
+
+        self.assertRaises(KeyError, tree.delete, 6)
+
+class T10_contains(unittest.TestCase):
+
+    def test_contains(self):
+        tree = lab3.Tree()
+        tree.insert(10)
+        tree.insert(4)
+        tree.insert(11)
+        tree.insert(5)
+        contain_test = tree.contains(10)
+        contain_false = tree.contains(9)
+
+        self.assertEqual(contain_test, True)
+        self.assertEqual(contain_false, False)
+
 if __name__ == '__main__' :
     unittest.main()
