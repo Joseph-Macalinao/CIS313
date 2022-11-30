@@ -38,7 +38,7 @@ class rb_tree(object):
         # Extracts the color of the node and print it in the format -dataC- where C is B for black and R for red
         if curr_node is not self.sentinel:
 
-            if curr_node.color is "red":
+            if curr_node.color == "red":
                 node_color = "R"
             else:
                 node_color = "B"
@@ -219,6 +219,13 @@ class rb_tree(object):
                 self.__rb_delete_fixup(x)
 
     def left_rotate(self, current_node):
+        '''
+        Rotates the red-black tree at the current node left-ways             5                                  7
+                                                                              \     left rotate on 5    ->     /
+                                                                               7                              5
+        :param current_node: the node object to rotate left on
+        :return: no return, changes the structure of the red black tree "in place"
+        '''
         # If there is nothing to rotate with, then raise a KeyError
         # if x is the root of the tree to rotate with left child subtree T1 and right child y, 
         # where T2 and T3 are the left and right children of y then:
@@ -226,10 +233,31 @@ class rb_tree(object):
         # T1 becomes left child of x and T2 becomes right child of x
 
         # refer page 328 of CLRS book for rotations
+        if self.root is None:
+            raise KeyError
+        change = current_node.right
+        current_node.right = change.left
+        if change.left.data is not None:
+            change.left.parent = current_node
+        change.parent = current_node.parent
+        if change.parent.data is None:
+            self.root = change
+        elif current_node is current_node.parent.left:
+            current_node.parent.left = change
+        else:
+            current_node.parent.right = change
+        change.left = current_node
+        current_node.parent = change
 
-        pass
     
     def right_rotate(self, current_node):
+        '''
+                Rotates the red-black tree at the current node right-ways      5                                  7
+                                                                            /     right rotate on 5    ->         \
+                                                                           7                                       5
+        :param current_node: the node object to rotate right on
+        :return: no return, changes the structure of the red black tree "in place"
+        '''
         # If there is nothing to rotate with, then raise a KeyError
         # If y is the root of the tree to rotate with right child subtree T3 and left child x, 
         # where T1 and T2 are the left and right children of x then:
@@ -237,29 +265,127 @@ class rb_tree(object):
         # T2 becomes left child of y and T3 becomes right child of y
 
         # refer page 328 of CLRS book for rotations
-
-        pass
+        if self.root is None:
+            raise KeyError
+        change = current_node.left
+        current_node.left = change.right
+        if change.right.data is not None:
+            change.right.parent = current_node
+        change.parent = current_node.parent
+        if change.parent.data is None:
+            self.root = change
+        elif current_node is current_node.parent.right:
+            current_node.parent.right = change
+        else:
+            current_node.parent.left = change
+        change.right = current_node
+        current_node.parent = change
 
     
     def __rb_insert_fixup(self, z):
+        '''
+        This function is used to fix any possible violations that may have occurred when inserting a node into a red
+        black tree
+        :param z: node object of the new node being inserted
+        :return: no return, fixes the structure and coloring of the r-b tree in place
+        '''
         # This function maintains the balancing and coloring property after bst insertion into
         # the tree. Please red the code for insert() method to get a better understanding
         # refer page 330 of CLRS book and lecture slides for rb_insert_fixup
 
         # if you form a triangle with the new insert, do a rotation left or right through the z.parent
         # if you form a line, (also made from triangle rotate, rotate on z.p.p then recolor z.p and z.p.p
-        pass
+        while z.parent.color == 'red':
+            if z.parent is z.parent.parent.left:
+                y = z.parent.parent.right
+                if y.color == 'red':
+                    z.parent.color = 'black'
+                    y.color = 'black'
+                    z.parent.parent.color = 'red'
+                    z = z.parent.parent
+                else:
+                    if z is z.parent.right:
+                        z = z.parent
+                        self.left_rotate(z)
+
+                    z.parent.color = 'black'
+                    z.parent.parent.color = 'red'
+                    self.right_rotate(z.parent.parent)
+
+            else:
+                y = z.parent.parent.left
+                if y.color == 'red':
+                    z.parent.color = 'black'
+                    y.color = 'black'
+                    z.parent.parent.color = 'red'
+                    z = z.parent.parent
+                else:
+                    if z is z.parent.left:
+                        z = z.parent
+                        self.right_rotate(z)
+
+                    z.parent.color = 'black'
+                    z.parent.parent.color = 'red'
+                    self.left_rotate(z.parent.parent)
+        self.root.color = 'black'
+
 
     def __rb_delete_fixup(self, x):
+        '''
+        This function is used to fix any possible violations that may have occurred when deleting a node from a red
+        black tree
+        :param z: node object of the new node being deleted
+        :return: no return, fixes the structure and coloring of the r-b tree in place
+        '''
         # This function maintains the balancing and coloring property after bst deletion 
         # from the tree. Please read the code for delete() method to get a better understanding.
         # refer page 338 of CLRS book and lecture slides for rb_delete_fixup
-        
-        pass
 
+        while x is not self.root and x.color == 'black':
+            if x is x.parent.left:
 
-    
+                w = x.parent.right
 
+                if w.color == 'red':
+                    w.color = 'black'
+                    x.parent.color = 'red'
+                    self.left_rotate(x.parent)
+                    w = x.parent.right
+                if w.left.color == 'black' and w.right.color == 'black':
+                    w.color = 'red'
+                    x = x.parent
+                else:
+                    if w.right.color == 'black':
+                        w.left.color = 'black'
+                        w.color = 'red'
+                        self.right_rotate(w)
+                        w = x.parent.right
+                    w.color = x.parent.color
+                    x.parent.color = 'black'
+                    w.right.color = 'black'
+                    self.left_rotate(x.parent)
+                    x = self.root
+            else:
 
-    
-    
+                w = x.parent.left
+
+                if w.color == 'red':
+                    w.color = 'black'
+                    x.parent.color = 'red'
+                    self.right_rotate(x.parent)
+                    w = x.parent.left
+                if w.right.color == 'black' and w.left.color == 'black':
+                    w.color = 'red'
+                    x = x.parent
+                else:
+                    if w.left.color == 'black':
+                        w.right.color = 'black'
+                        w.color = 'red'
+                        self.left_rotate(w)
+                        w = x.parent.left
+                    w.color = x.parent.color
+                    x.parent.color = 'black'
+                    w.left.color = 'black'
+                    self.right_rotate(x.parent)
+                    x = self.root
+        x.color = 'black'
